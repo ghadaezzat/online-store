@@ -1,4 +1,8 @@
-<html>
+
+
+<?php
+require ('functions/functions.php');
+?><html>
     <head>
         <title>
             online store
@@ -34,18 +38,21 @@
                 <div id="sidebar">
                     <div id="sidebar_title">Categories </div>
                     <ul id="cats">
-                                <li><a href="#">laptops</a></li> 
- 
+                        <?php   $cats=getCats(); ?>
+                        <?php foreach($cats as $item) :?>
+                                <li><a href="#"><?= $item['cat_title']?></a></li> 
+                            <?php endforeach; ?> 
 
                     </ul>
                     <div id="sidebar_title">Brands </div>
                     <ul id="cats">
-                                <li><a href="#">mobiles</a></li> 
-
+                        <?php   $brands=getBrands(); ?>
+                        <?php foreach($brands as $item) :?>
+                                <li><a href="#"><?= $item['brand_title']?></a></li> 
+                        <?php endforeach; ?> 
                     </ul>
                 </div>
-                <div id="content_area">  <?php 
-                            require($view);  ?></div>
+                <div id="content_area"> </div>
                           </div>
 
             
