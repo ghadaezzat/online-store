@@ -32,6 +32,7 @@ body{
     width:1000px;
     height:auto;
     margin:auto;
+    background: black;
     
 }
 .header_wrapper{
@@ -113,31 +114,38 @@ body{
     margin: 5px;
 }
 #cats a{
-color: white;
-padding: 8px;
-margin: 5px;
-font-size: 20px;
-font-family: COMIC SANS MS;
-text-decoration: none;
+    color: white;
+    padding: 8px;
+    margin: 5px;
+    font-size: 20px;
+    font-family: COMIC SANS MS;
+    text-decoration: none;
 }
 #cats a:hover{
     color:orange;
     font-weight: bolder;
 }
 #products_box{
-  width:780px;
-text-align: center;
-margin-left: 30px;
-margin-bottom: 10px;
+    width:780px;
+    text-align: center;
+    margin-left: 30px;
+    margin-bottom: 10px;
 }
 #single_product{
     float:left;
-    margin-left: 20px;
+    margin-left: 30px;
     padding: 10px;
 }
 #single_product img{
     border: 2px solid black;
 }
+#shopping_cart{
+  width:800px;
+  height:50px;
+  background: black;
+  color: white;
+}
+
 #footer{
     width: 1000px;
     height:100px;

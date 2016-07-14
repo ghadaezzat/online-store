@@ -69,4 +69,18 @@ function getPro(){
     return $products; 
             
 }
+function getDetails($product_id){
+        global $con;
+        $query="select * from products where product_id= :product_id";
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':product_id',$product_id,PDO::PARAM_INT);
+        $stmt->execute();
+        $product=$stmt->fetch(PDO::FETCH_ASSOC);
+        return $product;
+
+
+
+
+
+}
 ?>
