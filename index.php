@@ -52,13 +52,34 @@ require ('functions/functions.php');
                         <?php endforeach; ?> 
                     </ul>
                 </div>
-                <div id="content_area"> </div>
+                <div id="content_area">
+                    <div id="products_box">
+                        <?php $products=getPro(); ?>
+                        <?php foreach($products as $item) :?>
+                                <div id="single_product">
+                                    <h3><?= $item['product_title']?></h3>
+                                    <img src="admin_area/product_images/<?= $item['product_image'] ?>" width="180" height="180"/>
+                                    <p>$<?= $item['product_price'] ?></p>
+                                    <a href="details.php?pro_id=<?= $item['product_id'] ?>" style="float: left;">Details</a>
+                                            <a href="index.php?pro_id=<?= $item['product_id'] ?>">
+                                                <button style='float: right;'>Add to cart
+                                                </button>
+                                            </a>
+                                </div> 
+                        <?php endforeach; ?> 
+                        
+                    </div>
+                </div>
                           </div>
 
             
 
 
-            <div id="footer">this is footer</div>
+            <div id="footer">
+            <h2 style="text-align: center;padding-top: 30px;">
+                &copy;2016 by Ghada ezzat
+            </h2>
+            </div>
 </div>
     </body>
 </html>
