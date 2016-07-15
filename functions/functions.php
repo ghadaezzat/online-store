@@ -62,12 +62,32 @@ function insertProduct(){
 }
 function getPro(){
     global $con;
-    $query="select * from products order by RAND() LIMIT 0,6";
-    $stmt=$con->prepare($query);
-    $stmt->execute();
+    if (isset($_GET['cat'])){
+         $query="select * from products where product_cat= :cat_id";
+         
+         $stmt=$con->prepare($query);
+         $stmt->bindValue(':cat_id',$_GET['cat'],PDO::PARAM_INT);
+
+    }
+    elseif (isset($_GET['brand'])) {
+
+         $query="select * from products where product_brand= :brand_id";
+         $stmt=$con->prepare($query);
+         $stmt->bindValue(':brand_id',$_GET['brand'],PDO::PARAM_INT);
+    }
+    else
+    {
+        $query="select * from products order by RAND() LIMIT 0,6";
+        $stmt=$con->prepare($query);
+    }
+    $bool=$stmt->execute();
     $products=$stmt->fetchAll(PDO::FETCH_ASSOC);
+    if($products){
     return $products; 
-            
+    }
+    else{
+        echo "<h1>No available products</h1>";
+    }
 }
 function getDetails($product_id){
         global $con;
@@ -77,10 +97,7 @@ function getDetails($product_id){
         $stmt->execute();
         $product=$stmt->fetch(PDO::FETCH_ASSOC);
         return $product;
-
-
-
-
-
+       
 }
+
 ?>

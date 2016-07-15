@@ -40,7 +40,7 @@ require ('functions/functions.php');
                     <ul id="cats">
                         <?php   $cats=getCats(); ?>
                         <?php foreach($cats as $item) :?>
-                                <li><a href="#"><?= $item['cat_title']?></a></li> 
+                        <li><a href="index.php?cat=<?= $item['cat_id']; ?>"><?= $item['cat_title']?></a></li> 
                             <?php endforeach; ?> 
 
                     </ul>
@@ -48,7 +48,7 @@ require ('functions/functions.php');
                     <ul id="cats">
                         <?php   $brands=getBrands(); ?>
                         <?php foreach($brands as $item) :?>
-                                <li><a href="#"><?= $item['brand_title']?></a></li> 
+                                <li><a href="index.php?brand=<?= $item['brand_id']; ?>"><?= $item['brand_title']?></a></li> 
                         <?php endforeach; ?> 
                     </ul>
                 </div>
@@ -62,9 +62,7 @@ require ('functions/functions.php');
                     <div id="products_box">
                <?php
 
-              if(!($_GET)){
                 require "products_page.php";
-               }
                
                ?>
                     </div>
