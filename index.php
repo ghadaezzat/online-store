@@ -55,10 +55,12 @@ require ('functions/functions.php');
                 
                 <div id="content_area">
                     <div id='shopping_cart'>
-                        <?php $count=total_items(); ?>
+                        <?php $purchased_items=total_items(); 
+                        $count=count($purchased_items);
+                        $sum=total_price(); ?>
                         <span style="float: right;font-size: 18px;padding: 5px;line-height: 40px;">
                             Welcome Guest!<b style="color:yellow;">shopping cart</b>
-                            Total items :<?= $count; ?> Total price  <a href="cart.php" style="color:yellow;">Go to cart </a>
+                            Total items :<?= $count; ?> Total price :$<?= $sum ?> <a href="cart.php" style="color:yellow;">Go to cart </a>
                         </span> 
                     </div>
                     <div id="products_box">

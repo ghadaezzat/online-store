@@ -70,17 +70,25 @@ function cart(){
 function total_items(){
     global $con;
     $ip=getIp(); 
-
     $query="select * from cart where ip_add= :ip_add ";
     $stmt=$con->prepare($query);
     $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
     $stmt->execute();
-    while ($item=$stmt->fetch(PDO::FETCH_ASSOC)){
-    $pro_id=$item['p_id'];
-        
-    }
+    $products=array();
     
+    while ($item=$stmt->fetch(PDO::FETCH_ASSOC)){
+            $pro_id=$item['p_id'];
+            $query1="select * from products where product_id = :p_id ";
+            $stmt1=$con->prepare($query1);
+            $stmt1->bindValue(':p_id',$pro_id,PDO::PARAM_INT);
+            $stmt1->execute();  
+            $product=$stmt1->fetch(PDO::FETCH_ASSOC);
+            $products[]=$product;
+  
     }
+    return $products;
+}
+ 
 function total_price(){
     global $con;
     $ip=  getIp();
@@ -88,9 +96,28 @@ function total_price(){
     $stmt=$con->prepare($query);
     $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
     $stmt->execute();
-    $items=$stmt->fetchAll(PDO::FETCH_ASSOC);    
+    $product_price=array();
+    while ($item=$stmt->fetch(PDO::FETCH_ASSOC)){
+    $pro_id=$item['p_id'];
+    //after getting the product id ,we will use it to get the price of the product 
+    $query1="select product_price from products where product_id = :p_id ";
+    $stmt1=$con->prepare($query1);
+    $stmt1->bindValue(':p_id',$pro_id,PDO::PARAM_INT);
+    $stmt1->execute();
+    if ($stmt1){ 
+    $price=$stmt1->fetch(PDO::FETCH_COLUMN);
+    }
+    else{
+        $price=0;
+    }
     
-}
+    $product_price[]=$price;
+   
+        }
+    return array_sum($product_price);
+    
+    }
+    
 function getCats(){
     global $con;
     $query="select * from categories";
