@@ -2,7 +2,8 @@
 
 <?php
 require ('functions/functions.php');
-?><html>
+?>
+<html>
     <head>
         <title>
             online store
@@ -15,26 +16,25 @@ require ('functions/functions.php');
                 <div>
                     <img class="logo" src="images/target.jpg"/>
                     <img class="banner" src="images/banner.jpg"/>
-
                 </div>
             </div>
             
             <div class="menubar">
                 <ul id="menu">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">All products</a></li>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="all_products.php">All products</a></li>
                     <li><a href="#">My account</a></li>
                     <li><a href="#">sign up</a></li>
                     <li><a href="#">shopping cart</a></li>
                     <li><a href="#">contact us</a></li>
                 </ul>
                 <div id="form">
-                    <form method="post" action="results.php" enctype="multipart/form-data"/>
+                    <form method="get" action="results.php" enctype="multipart/form-data"/>
                     <input type="text" name="user_query" placeholder="search for a product"/>
                     <input type="submit" name="search" value="search"/>
                 </div>
             </div>
-                        <div class="content_wrapper">
+            <div class="content_wrapper">
                 <div id="sidebar">
                     <div id="sidebar_title">Categories </div>
                     <ul id="cats">
@@ -52,11 +52,13 @@ require ('functions/functions.php');
                         <?php endforeach; ?> 
                     </ul>
                 </div>
+                
                 <div id="content_area">
                     <div id='shopping_cart'>
+                        <?php $count=total_items(); ?>
                         <span style="float: right;font-size: 18px;padding: 5px;line-height: 40px;">
                             Welcome Guest!<b style="color:yellow;">shopping cart</b>
-                            Total items :Total price  <a href="cart.php" style="color:yellow;">Go to cart </a>
+                            Total items :<?= $count; ?> Total price  <a href="cart.php" style="color:yellow;">Go to cart </a>
                         </span> 
                     </div>
                     <div id="products_box">
@@ -67,7 +69,7 @@ require ('functions/functions.php');
                ?>
                     </div>
                 </div>
-                          </div>
+         </div>
 
             
 

@@ -17,8 +17,80 @@ $con=new PDO("mysql:host=".DB_HOST.";dbname=". DB_NAME, DB_USER, DB_PASS);
 	echo $e->getMessage();
 }
 
+function getIp() {
 
+    $ip = $_SERVER['REMOTE_ADDR'];
 
+ 
+
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+    }
+
+ 
+
+    return $ip;
+
+}
+function cart(){
+    if (isset($_GET['add_cart'])){
+        global $con;
+        $pro_id=$_GET['add_cart'];
+        $query="select * from cart where ip_add= :ip_add AND p_id = :pro_id";
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':p_id',$pro_id,PDO::PARAM_INT);
+        $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
+        $stmt->execute();
+        $pros=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        var_dump($pros);
+        //the localhost have ip address 1
+        $ip=getIp(); 
+
+        if (count($pros))
+        {
+            
+        }
+        else{
+            $query='INSERT INTO cart (p_id,ip_add)  VALUES(:p_id, :ip_add)';
+            $stmt=$con->prepare($query);
+            $stmt->bindValue(':p_id',$pro_id,PDO::PARAM_INT);
+            $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
+            $out=$stmt->execute();
+            echo '<script>window.open("index.php","_self")</script>';
+            
+        }
+    }
+}
+function total_items(){
+    global $con;
+    $ip=getIp(); 
+
+    $query="select * from cart where ip_add= :ip_add ";
+    $stmt=$con->prepare($query);
+    $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
+    $stmt->execute();
+    while ($item=$stmt->fetch(PDO::FETCH_ASSOC)){
+    $pro_id=$item['p_id'];
+        
+    }
+    
+    }
+function total_price(){
+    global $con;
+    $ip=  getIp();
+    $query="select * from cart where ip_add= :ip_add ";
+    $stmt=$con->prepare($query);
+    $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
+    $stmt->execute();
+    $items=$stmt->fetchAll(PDO::FETCH_ASSOC);    
+    
+}
 function getCats(){
     global $con;
     $query="select * from categories";
@@ -80,7 +152,7 @@ function getPro(){
         $query="select * from products order by RAND() LIMIT 0,6";
         $stmt=$con->prepare($query);
     }
-    $bool=$stmt->execute();
+    $stmt->execute();
     $products=$stmt->fetchAll(PDO::FETCH_ASSOC);
     if($products){
     return $products; 
@@ -99,5 +171,26 @@ function getDetails($product_id){
         return $product;
        
 }
+function get_all_products(){
+        global $con;
+        $query="select * from products ";
+        $stmt=$con->prepare($query);
+        $stmt->execute();
+        $all_products=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $all_products;
+    
+}
+function searchProducts(){
+    global $con;
+    if (isset($_GET['search'])){
+        $user_query=$_GET['user_query'];
+        $query="select * from products where product_keywords like :product_keywords ";
+        $stmt=$con->prepare($query);
 
+        $stmt->bindValue(':product_keywords',"%$user_query%",PDO::PARAM_STR);
+        $stmt->execute();
+        $products=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $products;
+    }
+}
 ?>
