@@ -65,8 +65,14 @@ require ('functions/functions.php');
                     </div>
                     <div id="products_box">
                <?php
-                require  "products_page.php";
-          
+               
+                //var_dump($_SERVER['REQUEST_URI']);
+                $homepage = "/on/index.php";
+                $currentpage = $_SERVER['REQUEST_URI'];
+                if(((strpos($currentpage,$homepage) !== false))) {
+                    require  "products_page.php";
+                }
+               
                ?>
                     </div>
                 </div>
