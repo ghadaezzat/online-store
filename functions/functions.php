@@ -9,9 +9,7 @@ define("ROOT_PATH","/on");
 define("ROOT_URL","http://localhost/on");
 //establish a connection to database
 try{
-$con=new PDO("mysql:host=".DB_HOST.";dbname=". DB_NAME, DB_USER, DB_PASS);
-
-
+    $con=new PDO("mysql:host=".DB_HOST.";dbname=". DB_NAME, DB_USER, DB_PASS);
 }catch(PDOException $e){
 	
 	echo $e->getMessage();
@@ -39,8 +37,11 @@ function getIp() {
 
 }
 function cart(){
+    global $con;
+        //the localhost have ip address 1
     if (isset($_GET['add_cart'])){
-        global $con;
+                $ip=getIp();
+
         $pro_id=$_GET['add_cart'];
         $query="select * from cart where ip_add= :ip_add AND p_id = :pro_id";
         $stmt=$con->prepare($query);
@@ -49,8 +50,7 @@ function cart(){
         $stmt->execute();
         $pros=$stmt->fetchAll(PDO::FETCH_ASSOC);
         var_dump($pros);
-        //the localhost have ip address 1
-        $ip=getIp(); 
+ 
 
         if (count($pros))
         {
@@ -219,5 +219,23 @@ function searchProducts(){
         $products=$stmt->fetchAll(PDO::FETCH_ASSOC);
         return $products;
     }
+}
+function updateCart(){
+    var_dump($_POST);
+    global $con;
+    $IP=  getIp(); 
+    if (isset($_POST['update_cart'])){
+        foreach ($_POST['remove'] as $remove_id){
+            $delete_query="delete from cart where p_id=:remove_id and ip_add=:ip";
+            $stmt=$con->prepare($delete_query);
+            $stmt->bindValue(':remove_id',"$remove_id",PDO::PARAM_INT);
+            $stmt->bindValue(':ip',"$IP",PDO::PARAM_STR);
+            $output=$stmt->execute();
+            if ($output){
+                //refresh the page by redirecting it to same page _self variable
+               // echo '<script>window.open("cart.php","_self")</script>';
+    echo "<script>window.location.href='cart.php'</script>";
+                }
+        }  }
 }
 ?>

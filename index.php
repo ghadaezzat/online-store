@@ -65,9 +65,8 @@ require ('functions/functions.php');
                     </div>
                     <div id="products_box">
                <?php
-
-                require "products_page.php";
-               
+                require  "products_page.php";
+          
                ?>
                     </div>
                 </div>
