@@ -83,7 +83,7 @@ function total_price(){
     $stmt=$con->prepare($query);
     $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
     $stmt->execute();
-    $product_price=array();
+    $total_price=array();
     while ($item=$stmt->fetch(PDO::FETCH_ASSOC)){
     $pro_id=$item['p_id'];
     //after getting the product id ,we will use it to get the price of the product 
@@ -93,6 +93,7 @@ function total_price(){
     $stmt1->execute();
     if ($stmt1){ 
     $price=$stmt1->fetch(PDO::FETCH_COLUMN);
+    $total_price[]=$price*$item['qty'];
     }
     else{
         $price=0;
@@ -101,8 +102,8 @@ function total_price(){
     $product_price[]=$price;
    
         }
-    return array_sum($product_price);
-    
+    return array_sum($total_price);
+   
     }
     
 function getCats(){
@@ -209,9 +210,10 @@ function searchProducts(){
 }
 function updateCart(){
     global $con;
-    $IP=  getIp(); 
+    $IP=  getIp();
+
     if (isset($_POST['update_cart'])){
-        if (isset($_POST['remove[]'])){
+       if (isset($_POST['remove[]'])){
         foreach ($_POST['remove'] as $remove_id){
             $delete_query="delete from cart where p_id=:remove_id and ip_add=:ip";
             $stmt=$con->prepare($delete_query);
@@ -224,7 +226,8 @@ function updateCart(){
     echo "<script>window.location.href='cart.php'</script>";
                 }
     }  }}
-}
+    
+            }
 
 function updateQty(){
     global $con;
@@ -232,31 +235,27 @@ function updateQty(){
     if ((isset($_POST['update_cart']))){
          foreach ($_POST['id'] as $key=>$id){
              if (!empty($_POST['qty'][$key])){
-            $qty=$_POST['qty'][$key];
-            $update_query="update cart set qty=:qty where p_id=:p_id and ip_add=:ip_add";
-        $stmt=$con->prepare($update_query);
-        $stmt->bindValue(':qty',"$qty",PDO::PARAM_INT);
-        $stmt->bindValue(':p_id',$id,PDO::PARAM_INT);
-        $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
-        
-        $stmt->execute();
-             if ($stmt->execute()){
+                $qty=$_POST['qty'][$key];
+                $update_query="update cart set qty=:qty where p_id=:p_id and ip_add=:ip_add";
+                $stmt=$con->prepare($update_query);
+                $stmt->bindValue(':qty',"$qty",PDO::PARAM_INT);
+                $stmt->bindValue(':p_id',$id,PDO::PARAM_INT);
+                $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->execute()){
                 //refresh the page by redirecting it to same page _self variable
              //echo '<script>window.open("cart.php","_self")</script>';
     //echo "<script>window.location.href='cart.php'</script>";
-
-
                  }
              }
                          }
+        }
+
         $query3="select qty from cart where ip_add= :ip";
         $stmt=$con->prepare($query3);
         $stmt->bindValue(':ip',$ip,PDO::PARAM_STR);
         $stmt->execute();
         $qty_array=$stmt->fetchAll(PDO::FETCH_COLUMN);            
-              return $qty_array;
-    
-
-        }
-}
+        return $qty_array;
+             }
 ?>

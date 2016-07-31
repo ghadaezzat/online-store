@@ -1,7 +1,6 @@
 
 
 <?php
-session_start();
 require ('functions/functions.php');
 ?>
 <html>
@@ -13,7 +12,7 @@ require ('functions/functions.php');
     </head>
     <body>
         <div class="main_wrapper">
-            <div class="issetheader_wrapper">
+            <div class="header_wrapper">
                 <div>
                     <img class="logo" src="images/target.jpg"/>
                     <img class="banner" src="images/banner.jpg"/>
@@ -63,7 +62,7 @@ require ('functions/functions.php');
                         $sum=total_price(); ?>
                         <span style="float: right;font-size: 18px;padding: 5px;line-height: 40px;">
                             Welcome Guest!<b style="color:yellow;">shopping cart</b>
-                            Total items :<?= $count; ?> Total price :$<?= $sum ?> <a href="cart.php" style="color:yellow;">Go to cart </a>
+                            Total items :<?= $count; ?> Total price :$<?= $sum; ?> <a href="cart.php" style="color:yellow;">Go to cart </a>
                         </span> 
                     </div>
                     <div id="products_box">
@@ -80,10 +79,6 @@ require ('functions/functions.php');
                     </div>
                 </div>
          </div>
-
-            
-
-
             <div id="footer">
             <h2 style="text-align: center;padding-top: 30px;">
                 &copy;2016 by Ghada ezzat
