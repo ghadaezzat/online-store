@@ -1,7 +1,7 @@
 <?php
     include "index.php";
     updateCart();
-    updateQty();
+    $qty_array=updateQty();
     ?>
 <script type="text/javascript">
 
@@ -18,7 +18,7 @@
                         <th>quantity</th>\n\
                         <th>total price</th>\n\
                     </tr>\n\
-                    <?php foreach($purchased_items as $purchased_item) :?>\n\
+                    <?php foreach($purchased_items as $key=>$purchased_item) :?>\n\
                     <tr align="center">\n\
                     <td><input type="checkbox" name="remove[]" value="<?= $purchased_item['product_id']; ?>" /></td>\n\
                     <td><?= $purchased_item["product_title"] ?>\n\
@@ -26,10 +26,10 @@
             <img src="admin_area/product_images/<?= $purchased_item["product_image"]; ?>" width="60" height="60"/>\n\
                         \n\
                      </td>\n\
-                    <td><input type="text" name="qty[]" size="3" /></td>\n\
+                    <td><input type="text" name="qty[]" size="3" value="<?= $qty_array[$key]; ?> " /></td>\n\
                     <input type="hidden" name="id[]" value="<?= $purchased_item['product_id'] ?>" /></td>\n\
 \n\
-                    <td><?= "$".$purchased_item["product_price"] ?></td>\n\
+                    <td><?= "$".$purchased_item["product_price"]*$qty_array[$key]; ?></td>\n\
                     </tr>\n\
                     <?php endforeach; ?>\n\
                     <tr align="center">\n\
@@ -43,3 +43,4 @@
 </script>
 
 
+<?php    var_dump($qty_array); ?>

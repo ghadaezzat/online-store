@@ -230,29 +230,33 @@ function updateQty(){
     global $con;
     $ip=  getIp();
     if ((isset($_POST['update_cart']))){
-
          foreach ($_POST['id'] as $key=>$id){
              if (!empty($_POST['qty'][$key])){
             $qty=$_POST['qty'][$key];
-            echo $qty;
-            echo $id;
             $update_query="update cart set qty=:qty where p_id=:p_id and ip_add=:ip_add";
         $stmt=$con->prepare($update_query);
         $stmt->bindValue(':qty',"$qty",PDO::PARAM_INT);
         $stmt->bindValue(':p_id',$id,PDO::PARAM_INT);
         $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
-
+        
         $stmt->execute();
              if ($stmt->execute()){
                 //refresh the page by redirecting it to same page _self variable
              //echo '<script>window.open("cart.php","_self")</script>';
-    echo "<script>window.location.href='cart.php'</script>";
-            }
+    //echo "<script>window.location.href='cart.php'</script>";
+
+
+                 }
              }
-                          }
+                         }
+        $query3="select qty from cart where ip_add= :ip";
+        $stmt=$con->prepare($query3);
+        $stmt->bindValue(':ip',$ip,PDO::PARAM_STR);
+        $stmt->execute();
+        $qty_array=$stmt->fetchAll(PDO::FETCH_COLUMN);            
+              return $qty_array;
     
 
         }
-    
 }
 ?>

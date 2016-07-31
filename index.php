@@ -1,6 +1,7 @@
 
 
 <?php
+session_start();
 require ('functions/functions.php');
 ?>
 <html>
@@ -12,7 +13,7 @@ require ('functions/functions.php');
     </head>
     <body>
         <div class="main_wrapper">
-            <div class="header_wrapper">
+            <div class="issetheader_wrapper">
                 <div>
                     <img class="logo" src="images/target.jpg"/>
                     <img class="banner" src="images/banner.jpg"/>
