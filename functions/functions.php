@@ -18,38 +18,25 @@ try{
 function getIp() {
 
     $ip = $_SERVER['REMOTE_ADDR'];
-
- 
-
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-
         $ip = $_SERVER['HTTP_CLIENT_IP'];
-
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-
     }
-
- 
-
-    return $ip;
-
+   return $ip;
 }
+
 function cart(){
     global $con;
-        //the localhost have ip address 1
+    $ip=getIp();
     if (isset($_GET['add_cart'])){
-                $ip=getIp();
-
-        $pro_id=$_GET['add_cart'];
+        $pro_id= $_GET['add_cart'];
         $query="select * from cart where ip_add= :ip_add AND p_id = :pro_id";
         $stmt=$con->prepare($query);
-        $stmt->bindValue(':p_id',$pro_id,PDO::PARAM_INT);
+        $stmt->bindValue(':pro_id',$pro_id,PDO::PARAM_INT);
         $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
         $stmt->execute();
         $pros=$stmt->fetchAll(PDO::FETCH_ASSOC);
-        var_dump($pros);
  
 
         if (count($pros))
@@ -221,10 +208,10 @@ function searchProducts(){
     }
 }
 function updateCart(){
-    var_dump($_POST);
     global $con;
     $IP=  getIp(); 
     if (isset($_POST['update_cart'])){
+        if (isset($_POST['remove[]'])){
         foreach ($_POST['remove'] as $remove_id){
             $delete_query="delete from cart where p_id=:remove_id and ip_add=:ip";
             $stmt=$con->prepare($delete_query);
@@ -236,6 +223,36 @@ function updateCart(){
                // echo '<script>window.open("cart.php","_self")</script>';
     echo "<script>window.location.href='cart.php'</script>";
                 }
-        }  }
+    }  }}
+}
+
+function updateQty(){
+    global $con;
+    $ip=  getIp();
+    if ((isset($_POST['update_cart']))){
+
+         foreach ($_POST['id'] as $key=>$id){
+             if (!empty($_POST['qty'][$key])){
+            $qty=$_POST['qty'][$key];
+            echo $qty;
+            echo $id;
+            $update_query="update cart set qty=:qty where p_id=:p_id and ip_add=:ip_add";
+        $stmt=$con->prepare($update_query);
+        $stmt->bindValue(':qty',"$qty",PDO::PARAM_INT);
+        $stmt->bindValue(':p_id',$id,PDO::PARAM_INT);
+        $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
+
+        $stmt->execute();
+             if ($stmt->execute()){
+                //refresh the page by redirecting it to same page _self variable
+             //echo '<script>window.open("cart.php","_self")</script>';
+    echo "<script>window.location.href='cart.php'</script>";
+            }
+             }
+                          }
+    
+
+        }
+    
 }
 ?>

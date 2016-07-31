@@ -1,6 +1,7 @@
 <?php
     include "index.php";
     $products=get_all_products();
+    cart();
     ?>
 <script type="text/javascript">
          

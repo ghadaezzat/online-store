@@ -55,7 +55,9 @@ require ('functions/functions.php');
                 
                 <div id="content_area">
                     <div id='shopping_cart'>
-                        <?php $purchased_items=total_items(); 
+                        <?php 
+                        
+                        $purchased_items=total_items();
                         $count=count($purchased_items);
                         $sum=total_price(); ?>
                         <span style="float: right;font-size: 18px;padding: 5px;line-height: 40px;">
@@ -65,11 +67,11 @@ require ('functions/functions.php');
                     </div>
                     <div id="products_box">
                <?php
-               
                 //var_dump($_SERVER['REQUEST_URI']);
                 $homepage = "/on/index.php";
+                $homepage2='/on/';
                 $currentpage = $_SERVER['REQUEST_URI'];
-                if(((strpos($currentpage,$homepage) !== false))) {
+                if((((strpos($currentpage,"index") !== false)))) {
                     require  "products_page.php";
                 }
                
