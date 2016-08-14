@@ -37,8 +37,6 @@ function cart(){
         $stmt->bindValue(':ip_add',$ip,PDO::PARAM_STR);
         $stmt->execute();
         $pros=$stmt->fetchAll(PDO::FETCH_ASSOC);
- 
-
         if (count($pros))
         {
             
@@ -148,7 +146,11 @@ function insertProduct(){
 }
 }
 function getPro(){
-    global $con;
+    global $con;/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
     if (isset($_GET['cat'])){
          $query="select * from products where product_cat= :cat_id";
          
@@ -207,15 +209,16 @@ function searchProducts(){
         $products=$stmt->fetchAll(PDO::FETCH_ASSOC);
         return $products;
     }
-}
+}/*
 function updateCart(){
     global $con;
     $IP=  getIp();
-
     if (isset($_POST['update_cart'])){
-       if (isset($_POST['remove[]'])){
-        foreach ($_POST['remove'] as $remove_id){
+        print_r($_POST['update_cart']);
+
+    foreach ($_POST['remove'] as $remove_id){
             $delete_query="delete from cart where p_id=:remove_id and ip_add=:ip";
+            var_dump($delete_query);
             $stmt=$con->prepare($delete_query);
             $stmt->bindValue(':remove_id',"$remove_id",PDO::PARAM_INT);
             $stmt->bindValue(':ip',"$IP",PDO::PARAM_STR);
@@ -225,15 +228,29 @@ function updateCart(){
                // echo '<script>window.open("cart.php","_self")</script>';
     echo "<script>window.location.href='cart.php'</script>";
                 }
-    }  }}
+  }
     
-            }
-
+    }            }
+*/
 function updateQty(){
     global $con;
     $ip=  getIp();
     if ((isset($_POST['update_cart']))){
+        print_r($_POST);
          foreach ($_POST['id'] as $key=>$id){
+             if(!empty($_POST['remove'][$key])){
+                $delete_query="delete from cart where p_id=:remove_id and ip_add=:ip";
+                $stmt=$con->prepare($delete_query);
+                $stmt->bindValue(':remove_id',"$id",PDO::PARAM_INT);
+                $stmt->bindValue(':ip',"$ip",PDO::PARAM_STR);
+                $output=$stmt->execute();
+                if ($output){
+                //refresh the page by redirecting it to same page _self variable
+               // echo '<script>window.open("cart.php","_self")</script>';
+                    echo "<script>window.location.href='cart.php'</script>";                 
+             }
+             
+                }
              if (!empty($_POST['qty'][$key])){
                 $qty=$_POST['qty'][$key];
                 $update_query="update cart set qty=:qty where p_id=:p_id and ip_add=:ip_add";
@@ -245,7 +262,7 @@ function updateQty(){
                 if ($stmt->execute()){
                 //refresh the page by redirecting it to same page _self variable
              //echo '<script>window.open("cart.php","_self")</script>';
-    //echo "<script>window.location.href='cart.php'</script>";
+                echo "<script>window.location.href='cart.php'</script>";
                  }
              }
                          }
@@ -258,4 +275,51 @@ function updateQty(){
         $qty_array=$stmt->fetchAll(PDO::FETCH_COLUMN);            
         return $qty_array;
              }
+    function register(){
+        global $con;
+        if (isset($_POST['register'])){
+            $ip=  getIp();
+            $c_image=$_FILES['c_image']['name'];
+            $c_image_tmp=$_FILES['c_image']['tmp_name'];
+            $query='INSERT INTO customers (customer_ip, customer_name, customer_email, customer_pass,customer_country,customer_city,customer_contact,customer_address,customer_image) VALUES(:ip, :c_name, :c_email, :c_pass,:c_country,:c_city,:c_contact,:c_address,:c_image)';
+            $stmt=$con->prepare($query);
+            $stmt->bindValue(':ip',$ip,PDO::PARAM_STR);
+            $stmt->bindValue(':c_name',$_POST['c_name'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_email',$_POST['c_email'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_pass',$_POST['c_pass'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_country',$_POST['c_country'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_city',$_POST['c_city'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_contact',$_POST['c_contact'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_address',$_POST['c_address'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_image',$c_image,PDO::PARAM_STR);
+    
+            $out=$stmt->execute();
+    if ($out){
+        move_uploaded_file($c_image_tmp, "customer/customer_images/$c_image");
+        $sel_cart="select * from cart where ip_add =:ip";
+        $stmt_sel=$con->prepare($sel_cart);
+        $stmt_sel->bindValue(':ip',$ip,PDO::PARAM_STR);
+        $oo=$stmt_sel->execute();
+
+        $out_cart=$stmt_sel->fetchAll(PDO::FETCH_ASSOC);
+        
+
+        $out_count=  count($out_cart);
+        if($out_count == 0){
+            $_SESSION['customer_email']=$_POST['c_email'];
+            echo "<script>alert('account has been created successfully,thanks!')</script>";
+            echo "<script>window.open('account.php','_self')</script>";            
+        }else{
+            echo "<script>alert('account has been created successfully,thanks!')</script>";
+            echo "<script>window.open('checkout.php','_self')</script>";
+            
+        }
+
+        
+        //echo "<script>window.open('cart.php','_self')</script>";
+    }
+            
+        }
+        
+    }
 ?>

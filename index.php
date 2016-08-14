@@ -1,39 +1,13 @@
 
 
 <?php
+session_start();
 require ('functions/functions.php');
 ?>
-<html>
-    <head>
-        <title>
-            online store
-        </title>
-        <link rel="stylesheet" href="styles/style.css" media="all"/>
-    </head>
+
     <body>
         <div class="main_wrapper">
-            <div class="header_wrapper">
-                <div>
-                    <img class="logo" src="images/target.jpg"/>
-                    <img class="banner" src="images/banner.jpg"/>
-                </div>
-            </div>
-            
-            <div class="menubar">
-                <ul id="menu">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="all_products.php">All products</a></li>
-                    <li><a href="#">My account</a></li>
-                    <li><a href="#">sign up</a></li>
-                    <li><a href="#">shopping cart</a></li>
-                    <li><a href="#">contact us</a></li>
-                </ul>
-                <div id="form">
-                    <form method="get" action="results.php" enctype="multipart/form-data"/>
-                    <input type="text" name="user_query" placeholder="search for a product"/>
-                    <input type="submit" name="search" value="search"/>
-                </div>
-            </div>
+<?php include 'header.php'; ?>
             <div class="content_wrapper">
                 <div id="sidebar">
                     <div id="sidebar_title">Categories </div>
@@ -71,7 +45,7 @@ require ('functions/functions.php');
                 $homepage = "/on/index.php";
                 $homepage2='/on/';
                 $currentpage = $_SERVER['REQUEST_URI'];
-                if((((strpos($currentpage,"index") !== false)))) {
+                if ((strcmp($homepage2, $currentpage) == false)||(strcmp($homepage, $currentpage) == false)||(strpos($currentpage, "/on/index.php?add_cart") !==false)||(strpos($currentpage, "/on/index.php?cat") !==false)||(strpos($currentpage, "/on/index.php?brand") !==false)){
                     require  "products_page.php";
                 }
                
@@ -79,11 +53,8 @@ require ('functions/functions.php');
                     </div>
                 </div>
          </div>
-            <div id="footer">
-            <h2 style="text-align: center;padding-top: 30px;">
-                &copy;2016 by Ghada ezzat
-            </h2>
-            </div>
+
+              <?php include 'footer.php';?>
+
 </div>
     </body>
-</html>

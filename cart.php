@@ -1,6 +1,5 @@
 <?php
 include "index.php";
-updateCart();
 $qty_array = updateQty();
 ?>
 <script type="text/javascript">
@@ -19,7 +18,7 @@ $qty_array = updateQty();
                         <th>total price</th>\n\
                     </tr>\n\
                         <?php foreach ($purchased_items as $key => $purchased_item) : ?>\n\
-                        <?php if ($qty_array[$key]==0){$qty_array[$key] = 1;} ?>\n\
+                        <?php if ($qty_array[$key] == 0){$qty_array[$key] = 1;} ?>\n\
                         <tr align="center">\n\
                         <td><input type="checkbox" name="remove[]" value="<?= $purchased_item['product_id']; ?>" /></td>\n\
                         <td><?= $purchased_item["product_title"] ?>\n\
@@ -38,8 +37,8 @@ $qty_array = updateQty();
                     <?php endforeach; ?>\n\
                     <tr align="center">\n\
                     <td><input type="submit" name="update_cart" value="update cart"/></td>\n\
-                    <td><input type="submit" name="continue" value="continue shopping" /></td>\n\
-                    <td><a href="checkout.php"><button>checkout</button></a></td>\n\
+                    <td><a href="all_products.php"><input type="button" name="continue" value="continue shopping" /></a></td>\n\
+                    <td><a href="checkout.php"><button type="button">checkout</button></a></td>\n\
                     </tr>\n\
                 \n\
                 </table>\n\
