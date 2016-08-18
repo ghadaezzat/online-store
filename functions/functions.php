@@ -146,11 +146,7 @@ function insertProduct(){
 }
 }
 function getPro(){
-    global $con;/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    global $con;
     if (isset($_GET['cat'])){
          $query="select * from products where product_cat= :cat_id";
          
@@ -275,6 +271,7 @@ function updateQty(){
         $qty_array=$stmt->fetchAll(PDO::FETCH_COLUMN);            
         return $qty_array;
              }
+             
     function register(){
         global $con;
         if (isset($_POST['register'])){
@@ -300,16 +297,20 @@ function updateQty(){
         $stmt_sel=$con->prepare($sel_cart);
         $stmt_sel->bindValue(':ip',$ip,PDO::PARAM_STR);
         $oo=$stmt_sel->execute();
-
         $out_cart=$stmt_sel->fetchAll(PDO::FETCH_ASSOC);
-        
-
         $out_count=  count($out_cart);
         if($out_count == 0){
             $_SESSION['customer_email']=$_POST['c_email'];
+            $_SESSION['customer_name']=$_POST['c_name'];
+
             echo "<script>alert('account has been created successfully,thanks!')</script>";
             echo "<script>window.open('account.php','_self')</script>";            
+
+            
         }else{
+           $_SESSION['customer_email']=$_POST['c_email'];
+           $_SESSION['customer_name']=$_POST['c_name'];
+
             echo "<script>alert('account has been created successfully,thanks!')</script>";
             echo "<script>window.open('checkout.php','_self')</script>";
             
@@ -320,6 +321,40 @@ function updateQty(){
     }
             
         }
+        
+    }
+    function login(){
+        global $con;
+        $ip=  getIp();
+        if (isset($_POST['login'])){
+            $sel_query="select * from customers where customer_email=:c_email and customer_pass=:c_pass";
+            $stmt=$con->prepare($sel_query);
+            $stmt->bindValue(':c_email',$_POST['c_email'],PDO::PARAM_STR);
+            $stmt->bindValue(':c_pass',$_POST['c_pass'],PDO::PARAM_STR);
+            $out=$stmt->execute();
+            if($out){
+            $user=$stmt->fetch(PDO::FETCH_ASSOC); 
+            $_SESSION['customer_name']=$user['customer_name'];
+            $_SESSION['customer_email']=$user['customer_email'];
+            //////////////////////////
+            $sel_cart="select * from cart where ip_add =:ip";
+            $stmt_sel=$con->prepare($sel_cart);
+            $stmt_sel->bindValue(':ip',$ip,PDO::PARAM_STR);
+            $oo=$stmt_sel->execute();
+            if ($oo){
+                echo "<script>alert('you logged in successfully,thanks!')</script>";
+                echo "<script>window.open('checkout.php','_self')</script>";   
+            }else{
+                echo "<script>alert('you logged in successfully,thanks!')</script>";
+                echo "<script>window.open('account.php','_self')</script>";
+                
+            }
+            }else{
+                echo '<script>alert("password or email not correct")</h3>';
+            }
+            
+        }
+        
         
     }
 ?>

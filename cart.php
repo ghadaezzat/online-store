@@ -9,7 +9,7 @@ $qty_array = updateQty();
             <form action="" method="post" enctype="multipart/form-data">\n\
                 <table align="center" bgcolor="skyblue" width="700">\n\
                     <tr align="center">\n\
-                        <td colspan="5">update your cart or checkout</td>\n\
+                        <td colspan="5"><h2 class="card ">update your cart or checkout<h2></td>\n\
                     </tr>\n\
                     <tr>\n\
                         <th>remove</th>\n\

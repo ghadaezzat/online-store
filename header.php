@@ -12,7 +12,7 @@
            <link rel="stylesheet" href="styles/style.css" media="all"/>
 
     </head>           
-<div class="header_wrapper">
+            <div class="header_wrapper">
                 <div>
                     <img class="logo" src="images/target.jpg"/>
                     <img class="banner" src="images/banner.jpg"/>
@@ -35,3 +35,4 @@
                     </form>
                 </div>
             </div>
+            
