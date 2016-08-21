@@ -4,7 +4,6 @@
 <?php
 require ('functions/functions.php');
 session_start();
-$user=customerData();
 ?>
 
 
@@ -49,53 +48,43 @@ $user=customerData();
                        
                         </span> 
                     </div>
-                    <div id="products_box">
-                         <div class="row">
-                            <div class="col-md-5  toppad  pull-right col-md-offset-3 ">
-                                <A href="edit.php" >Edit Profile</A>
 
-                                <br>
-                                <p class=" text-info"><?=date("Y/m/d");?> </p>
+<div class="card card-container">
+                        <form action="edit_passwd.php" method="post" enctype="multipart/form-data">
+                            <h3> &nbsp;&nbsp;Change your password</h3>
+                            <br>
+
+
+
+                            <div class="form-group">
+                                 <label for="password" class="col-sm-5 control-label">Enter current password</label>
+                                 <div class="col-sm-7">
+                                     <input type="password" id="password" name="c_pass" placeholder="Password" class="form-control autofocus" required>
+                                 </div>
+                             </div>
+                            <div class="form-group">
+                                 <label for="password" class="col-sm-5 control-label">Enter new password</label>
+                                 <div class="col-sm-7">
+                                     <input type="password" id="password" name="c_pass1" placeholder="Password" class="form-control autofocus" required>
+                                 </div>
+                             </div>
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                 <label for="password" class="col-sm-5 control-label">Enter new password again</label>
+                                 <div class="col-sm-7">
+                                     <input type="password" id="password" name="c_pass2" placeholder="Password" class="form-control autofocus"required >
+                                 </div>
                             </div>
-         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6  " >
-   
-   
-          <div class="panel panel-info "  style="width: 750px;" >
-            <div class="panel-heading">
-              <h3 class="panel-title"> <?= $user['customer_name'];?></h3>
-            </div>
-              <div class="panel-body"  >
-                <div class="row">
-                    <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="customer/customer_images/<?= $user['customer_image'];?>" class="img-circle img-responsive" style="border:4px solid lightskyblue"> </div>
-                    <div class=" col-md-9 col-lg-9 "> 
-                  <table class="table table-user-information">
-                    <tbody>
-                      <tr>
-                        <td>customer email</td>
-                        <td><?= $user['customer_email']?></td>
-                      </tr> 
-                      <tr>
-                        <td>country</td>
-                        <td><?= $user['customer_country'];?></td>
-                      </tr>
-                      <tr>
-                        <td>city</td>
-                        <td><?= $user['customer_city'];?></td>
-                      </tr>
-                      <tr>
-                        <td>phone</td>
-                        <td><?= $user['customer_contact'];?></td>
-                      </tr>
-                  </table>
-                </div>
-                </div>
-         </div>
-          </div>
-                            </div>
-                         </div>
+                        
+
+                
+                      
+                            <input type="submit" name="update_passwd" value="Update" class="btn btn-lg btn-primary btn-block " />
+                       
+                        </form>
+
                     </div>
                 </div>
-</div>
+            </div>
 
               <?php include 'footer.php';?>
 
@@ -104,3 +93,4 @@ $user=customerData();
 
     </body>
 </html>
+

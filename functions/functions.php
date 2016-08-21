@@ -120,12 +120,23 @@ function getBrands(){
     $brands=$stmt->fetchAll(PDO::FETCH_ASSOC);
     return $brands;       
 }
+function getCustomers(){
+    global $con;
+    $query="select * from customers";
+    $stmt=$con->prepare($query);
+    $out=$stmt->execute();
+    if ($out){
+        $customers=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $customers;       
+    }
+
+    }
 function insertProduct(){
     global $con;
     
     //using prepare statements and binding values protestc against sql injection
     if (isset($_POST['insert_post'])){
-    $post=  filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    $post=  $_POST;
     $product_image=$_FILES['product_image']['name'];
     $product_image_tmp=$_FILES['product_image']['tmp_name'];
     $query='INSERT INTO products (product_title, product_cat, product_brand, product_price,product_desc,product_image,product_keywords) VALUES(:product_title, :product_cat, :product_brand, :product_price,:product_desc,:product_image,:product_keywords)';
@@ -139,10 +150,12 @@ function insertProduct(){
     $stmt->bindValue(':product_keywords',$post['product_keywords'],PDO::PARAM_STR);
     $out=$stmt->execute();
     if ($out){
-        move_uploaded_file($product_image_tmp, "product_images/$product_image");
-        echo "<script>alert('product inserted')<script>";
-        echo "<script>window.open('insert_product.php','_self')</script>";
+        $uploaded=move_uploaded_file($product_image_tmp, "product_images/$product_image");
+        if($uploaded){
+            echo "<script>alert('product inserted')<script>";
     }
+    
+        }
 }
 }
 function getPro(){
@@ -174,6 +187,7 @@ function getPro(){
         echo "<h1>No available products</h1>";
     }
 }
+//this function is used to edit product as well in admin_area
 function getDetails($product_id){
         global $con;
         $query="select * from products where product_id= :product_id";
@@ -181,9 +195,184 @@ function getDetails($product_id){
         $stmt->bindValue(':product_id',$product_id,PDO::PARAM_INT);
         $stmt->execute();
         $product=$stmt->fetch(PDO::FETCH_ASSOC);
+        var_dump($product);
         return $product;
        
 }
+function updateProduct(){
+            //print_r($_POST);
+        global $con;
+    if (isset($_POST['edit_post'])){
+        $product_id=$_POST['product_id'];
+        $update_product="update products set product_title=:product_title,product_price=:product_price,product_brand=:product_brand,product_cat=:product_cat,product_desc=:product_desc,product_keywords=:product_keywords where product_id=:p_id";
+        $stmt=$con->prepare($update_product);
+        $stmt->bindValue(':product_title',$_POST['product_title'],PDO::PARAM_STR);
+        $stmt->bindValue(':product_desc',$_POST['product_desc'],PDO::PARAM_STR);
+        $stmt->bindValue(':product_keywords',$_POST['product_keywords'],PDO::PARAM_STR);
+        $stmt->bindValue(':p_id',$product_id,PDO::PARAM_INT);
+        $stmt->bindValue(':product_brand',$_POST['product_brand'],PDO::PARAM_INT);
+        $stmt->bindValue(':product_cat',$_POST['product_cat'],PDO::PARAM_INT);
+        $stmt->bindValue(':product_price',$_POST['product_price'],PDO::PARAM_INT);
+
+        $t1=$stmt->execute();
+            $p_image=$_FILES['product_image']['name'];
+            $p_image_tmp=$_FILES['product_image']['tmp_name'];
+        if (isset($p_image)){
+            $update_image="update products set product_image=:product_image where product_id=:p_id";
+            $stmt1=$con->prepare($update_image);
+            $stmt1->bindValue(':p_id',$product_id,PDO::PARAM_INT);
+            $stmt1->bindValue(':product_image',$p_image,PDO::PARAM_STR);
+            $t2=$stmt1->execute();
+            if ($t1 && $t2){
+                $uploaded=move_uploaded_file($p_image_tmp, "product_images/$p_image");
+                if ($uploaded){
+                   echo "<script>alert('product has been uploaded successfully,thanks!')</script>";
+
+                    
+                }
+            }
+            
+        }
+    
+    }
+}
+function editCategory(){
+        global $con;
+        $query="select * from categories where cat_id= :cat_id";
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':cat_id',$_GET['edit_cat'],PDO::PARAM_INT);
+        $oo=$stmt->execute();
+        if ($oo){
+            $cat=$stmt->fetch(PDO::FETCH_ASSOC);
+            return $cat;
+        }else{
+            echo '<h2>cannot retrieve data</h2>';
+        }
+
+        }
+function updateCategory(){
+    if (isset($_POST['edit_cat'])){
+        global $con;
+        $query="update categories set cat_title=:cat_title where cat_id=:c_id";
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':cat_title',$_POST['category_title'],  PDO::PARAM_STR);
+        $stmt->bindValue(':c_id',$_GET['edit_cat'],  PDO::PARAM_INT);
+        $output=$stmt->execute();
+        if($output){
+            echo "<script>alert('category has updated successfully!')</script>";
+            echo "<script>window.open('index.php?view_cats','_self')</script>";
+
+        }
+        
+        
+    }
+}
+function editBrand(){
+        global $con;
+        $query="select * from brands where brand_id= :brand_id";
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':brand_id',$_GET['edit_brand'],PDO::PARAM_INT);
+        $oo=$stmt->execute();
+        if ($oo){
+            $brand=$stmt->fetch(PDO::FETCH_ASSOC);
+            return $brand;
+        }else{
+            echo '<h2>cannot retrieve data</h2>';
+        }
+
+        }
+function updateBrand(){
+    if (isset($_POST['edit_brand'])){
+        global $con;
+        $query="update brands set brand_title=:brand_title where brand_id=:brand_id";
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':brand_title',$_POST['brand_title'],  PDO::PARAM_STR);
+        $stmt->bindValue(':brand_id',$_GET['edit_brand'],  PDO::PARAM_INT);
+        $output=$stmt->execute();
+        if($output){
+            echo "<script>alert('brand has updated successfully!')</script>";
+            echo "<script>window.open('index.php?view_brands','_self')</script>";
+
+        }
+        
+        
+}
+
+        }
+function insertCategory(){
+    if (isset($_POST['insert_cat'])){
+        global $con;
+        $query='INSERT INTO categories (cat_title) VALUES(:cat_title)';
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':cat_title',$_POST['category_title'],  PDO::PARAM_STR);
+        $output=$stmt->execute();
+        if($output){
+            echo "<script>alert('category has been added successfully!')</script>";
+
+        }
+        
+}
+
+        }
+function insertBrand(){
+    if (isset($_POST['insert_brand'])){
+        global $con;
+        $query='INSERT INTO brands (brand_title) VALUES(:brand_title)';
+        $stmt=$con->prepare($query);
+        $stmt->bindValue(':brand_title',$_POST['brand_title'],  PDO::PARAM_STR);
+        $output=$stmt->execute();
+        if($output){
+            echo "<script>alert('brand has been added successfully!')</script>";
+
+        }
+        
+    }    
+}
+function deleteProduct(){
+        global $con;
+        $delete_query="delete from products where product_id=:p_id";
+            $stmt=$con->prepare($delete_query);
+            $stmt->bindValue(':p_id',$_GET['delete_pro'],  PDO::PARAM_INT);
+            $exec=$stmt->execute();
+            if ($exec){
+                    echo "<script>alert('product deleted successfully!')</script>";
+                    //_window.open =>opens new window,_self replaces current window with the new window
+                    echo "<script>window.open('index.php?view_products','_self')</script>";
+
+            
+            }
+        
+    }
+function deleteCat(){
+        global $con;
+        $delete_query="delete from categories where cat_id=:c_id";
+            $stmt=$con->prepare($delete_query);
+            $stmt->bindValue(':c_id',$_GET['delete_cat'],  PDO::PARAM_INT);
+            $exec=$stmt->execute();
+            if ($exec){
+                    echo "<script>alert('category deleted successfully!')</script>";
+                    //_window.open =>opens new window,_self replaces current window with the new window
+                    echo "<script>window.open('index.php?view_categories','_self')</script>";
+
+            
+            }
+        
+    }
+function deleteBrand(){
+        global $con;
+        $delete_query="delete from brands where brand_id=:b_id";
+            $stmt=$con->prepare($delete_query);
+            $stmt->bindValue(':b_id',$_GET['delete_brand'],  PDO::PARAM_INT);
+            $exec=$stmt->execute();
+            if ($exec){
+                    echo "<script>alert('brand deleted successfully!')</script>";
+                    //_window.open =>opens new window,_self replaces current window with the new window
+                    echo "<script>window.open('index.php?view_','_self')</script>";
+
+            
+            }
+        
+    }    
 function get_all_products(){
         global $con;
         $query="select * from products ";
@@ -193,6 +382,7 @@ function get_all_products(){
         return $all_products;
     
 }
+
 function searchProducts(){
     global $con;
     if (isset($_GET['search'])){
@@ -232,7 +422,6 @@ function updateQty(){
     global $con;
     $ip=  getIp();
     if ((isset($_POST['update_cart']))){
-        print_r($_POST);
          foreach ($_POST['id'] as $key=>$id){
              if(!empty($_POST['remove'][$key])){
                 $delete_query="delete from cart where p_id=:remove_id and ip_add=:ip";
@@ -304,15 +493,16 @@ function updateQty(){
             $_SESSION['customer_name']=$_POST['c_name'];
 
             echo "<script>alert('account has been created successfully,thanks!')</script>";
-            echo "<script>window.open('account.php','_self')</script>";            
+            echo "<script>window.location.href('account.php')</script>";            
 
+            
             
         }else{
            $_SESSION['customer_email']=$_POST['c_email'];
            $_SESSION['customer_name']=$_POST['c_name'];
 
             echo "<script>alert('account has been created successfully,thanks!')</script>";
-            echo "<script>window.open('checkout.php','_self')</script>";
+            echo "<scriptwindow.location.href(('checkout.php')</script>";
             
         }
 
@@ -357,4 +547,105 @@ function updateQty(){
         
         
     }
+    function customerData(){
+        global $con;
+        $sel_query="select * from customers where customer_email=:c_email ";
+        $stmt=$con->prepare($sel_query);
+        $stmt->bindValue(':c_email',$_SESSION['customer_email'],PDO::PARAM_STR);
+        $out=$stmt->execute();
+        if($out){
+            $user=$stmt->fetch(PDO::FETCH_ASSOC); 
+            return $user;    
+            
+            }
+    }
+    function updateAccount(){
+        global $con;
+        $c_email=$_SESSION['customer_email'];
+
+        if (isset($_POST['update'])){
+           $update_query="update customers set customer_name=:c_name,customer_city=:c_city,customer_address=:c_address where customer_email=:c_email";
+           $stmt=$con->prepare($update_query);
+           $stmt->bindValue(':c_name',$_POST['c_name'],  PDO::PARAM_STR);
+           $stmt->bindValue(':c_city',$_POST['c_city'],  PDO::PARAM_STR);
+           $stmt->bindValue(':c_address',$_POST['c_address'],  PDO::PARAM_STR);
+           $stmt->bindValue(':c_email',$c_email,  PDO::PARAM_STR);
+ 
+           $out=$stmt->execute();
+            if (isset($_POST['c_image'])){
+            $update_image="update customers set customer_image=:c_image where customer_email=:c_email";
+            $stmt1=$con->prepare($update_image);
+            $stmt1->bindValue(':c_image',$_FILES['c_image']['name']);
+            $stmt1->bindValue(':c_email',$c_email);
+            $out2=$stmt1->execute();
+
+           }
+           if ($out && $out2){
+               move_uploaded_file($_FILES['c_image']['tmp_name'], "customer/customer_images/"+$_FILES['c_image']['name']);
+               echo "<script>alert('your info updated successfully!')</script>";
+               echo "<script>window.open('account.php','_self')</script>";
+
+           }
+
+
+        }
+        
+    }
+    function updatePasswd(){
+        global $con;
+        if (isset($_POST['update_passwd'])){
+                    $user=customerData();
+        if ($_POST['c_pass'] == $user['customer_pass']){
+            if ($_POST['c_pass1'] == $_POST['c_pass2']){
+
+                $update_passwd="update customers set customer_pass=:c_pass1 where customer_email=:c_email";
+                $stmt_update=$con->prepare($update_passwd);
+                $stmt_update->bindValue(':c_pass1',$_POST['c_pass1'],PDO::PARAM_STR);
+                $stmt_update->bindValue(':c_email',$_SESSION['customer_email'],PDO::PARAM_STR);
+
+                $out3=$stmt_update->execute();
+      
+                if ($out3){
+                    echo "<script>alert('password updated successfully!')</script>";
+                    echo "<script>window.open('account.php','_self')</script>";
+                    
+                }
+
+            }
+        }
+                
+        }
+        
+    }
+function deleteAccount(){
+        global $con;
+        if (isset($_POST['yes'])){
+            $delete_query="delete from customers where customer_email=:c_email";
+            $stmt=$con->prepare($delete_query);
+            $stmt->bindValue(':c_email',$_SESSION['customer_email'],  PDO::PARAM_STR);
+            $exec=$stmt->execute();
+            if ($exec){
+                    echo "<script>alert('account deleted successfully!')</script>";
+                    session_destroy();
+                    echo "<script>window.open('index.php','_self')</script>";
+
+            
+            }
+            
+        }
+            if (isset($_GET['delete_customer'])){
+            $delete_query="delete from customers where customer_id=:c_id";
+            $stmt=$con->prepare($delete_query);
+            $stmt->bindValue(':c_id',$_GET['delete_customer'],  PDO::PARAM_STR);
+            $exec=$stmt->execute();
+            if ($exec){
+                    echo "<script>alert('customer deleted successfully!')</script>";
+                    session_destroy();
+                    echo "<script>window.open('index.php?view_customers','_self')</script>";
+
+            
+            }
+}
+
+            }
 ?>

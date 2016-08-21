@@ -25,14 +25,19 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+html{
+    height: 100%;
+}
 body{
     background: lightgrey;
+    height: 100%;
 }
 .main_wrapper{
     width:1000px;
-    height:auto;
     margin:auto;
-    background: black;
+    height: 100%;
+    height: auto;
+    background-color: black;
     
 }
 .header_wrapper{
@@ -50,6 +55,12 @@ body{
    width:800;
    float:left;
 }
+.banner_admin{
+   height:100px;
+   width:400;
+   float:left;
+   margin-left: 150px;
+}
 .menubar{
     width:1000px;
     height:50px;
@@ -58,7 +69,7 @@ body{
 #menu{
     float: left;
     padding: 0;
-    margin: 0;
+    marginorange: 0;
     line-height: 35px;
     background: gray;
 }
@@ -97,7 +108,7 @@ div #form{
 #sidebar{
     width: 200px;
     background: black;
-    float:left;    
+    float:left;  
 }
 #sidebar_title{
     background: white;
@@ -131,6 +142,7 @@ div #form{
     text-align: center;
     margin-left: 30px;
     margin-bottom: 10px;
+    height: fit-content;
 }
 #single_product{
     float:left;
@@ -194,3 +206,41 @@ div #form{
 select{
     width:100px;
 }
+#left{
+    height:max-content;
+    width:800px;
+    float: left;
+    border-top:5px groove red;
+    border-right: 5px groove red;
+}
+#right{
+    width:200px;
+    float: right;
+    border-top: 5px groove red;
+    background: black;
+    color:white;
+        height: 100vh;
+  
+}
+#right ul li a{
+    text-decoration: none;
+    color:lightgrey;
+    text-align:left;
+    font-size: 18px;
+    font-family: fantasy;
+    padding:6px;
+    margin: 6px;
+    
+}
+#right a:hover{
+    color:red;
+    font-weight: bolder;
+}
+li {list-style-type: none;}
+td{padding-left: 10px;}
+.admin-page-title{
+    text-align: center;
+    color:#b40c1e;
+    font-weight: bolder;
+}
+a{text-decoration: none;}
