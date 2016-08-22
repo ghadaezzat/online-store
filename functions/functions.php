@@ -557,7 +557,7 @@ function updateQty(){
             $user=$stmt->fetch(PDO::FETCH_ASSOC); 
             return $user;    
             
-            }
+    }
     }
     function updateAccount(){
         global $con;
@@ -648,4 +648,23 @@ function deleteAccount(){
 }
 
             }
+function adminLogin(){
+        global $con;
+        if (isset($_POST['admin_login'])){
+            $sel_query="select * from admins where user_email=:u_email and user_pass=:u_pass";
+            $stmt=$con->prepare($sel_query);
+            $stmt->bindValue(':u_email',$_POST['email'],PDO::PARAM_STR);
+            $stmt->bindValue(':u_pass',$_POST['pass'],PDO::PARAM_STR);
+            $out=$stmt->execute();
+            if($out){
+            $user=$stmt->fetch(PDO::FETCH_ASSOC);
+            session_start();
+            $_SESSION['user_email']=$user['user_email'];
+            echo "<script>window.open('index.php?logged_in=you are successfully logged in','_self')</script>";
+            
+            }else{
+                echo '<script>alert("email or password is wrong")</script>';
+            }
+        }
+}
 ?>

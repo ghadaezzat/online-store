@@ -207,7 +207,7 @@ select{
     width:100px;
 }
 #left{
-    height:max-content;
+    height:100%;
     width:800px;
     float: left;
     border-top:5px groove red;
@@ -219,7 +219,7 @@ select{
     border-top: 5px groove red;
     background: black;
     color:white;
-        height: 100vh;
+        height: 100%;
   
 }
 #right ul li a{
@@ -243,4 +243,6 @@ td{padding-left: 10px;}
     color:#b40c1e;
     font-weight: bolder;
 }
-a{text-decoration: none;}
+a{
+    text-decoration: none;
+}

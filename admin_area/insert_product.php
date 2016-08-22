@@ -1,4 +1,6 @@
-
+<?php if(!isset($_SESSION['user_email'])){
+    echo '<script>window.open("admin_login.php?NOT_ADMIN=you are not an admin")</script>';
+}else{?>
 <html>
     <head>
         <title>
@@ -87,7 +89,7 @@
         </form>
     </body>
 </html>
-<?php
+<?php }
 
 
 insertProduct();

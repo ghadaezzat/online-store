@@ -3,6 +3,11 @@
 
 
 $cat=editCategory();
+
+if(!isset($_SESSION['user_email'])){
+    echo '<script>window.open("admin_login.php?NOT_ADMIN=you are not an admin")</script>';
+}else{
+
 ?>
 <html>
     <head>
@@ -11,7 +16,7 @@ $cat=editCategory();
         </title>
     </head>
     <body >
-        <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+        <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>">
             <table align="center" style="background-color:lightgoldenrodyellow;width: 795px;height:100%" >
                 <thead align="center">
                     <td colspan="8">
@@ -37,4 +42,4 @@ $cat=editCategory();
         </form>
     </body>
 </html>
-<?php updateCategory(); ?>
+<?php } updateCategory(); ?>

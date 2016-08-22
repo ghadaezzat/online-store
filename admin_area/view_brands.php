@@ -1,4 +1,8 @@
-<?php $brands=getBrands(); ?>    
+<?php $brands=getBrands(); 
+if(!isset($_SESSION['user_email'])){
+    echo '<script>window.open("admin_login.php?NOT_ADMIN=you are not an admin")</script>';
+}else{
+?>   
     <table class="table table-bordered table-striped" style="background-color: lightgoldenrodyellow">
         <thead>
             <th colspan="4" ><h3 class="admin-page-title">View All Brands</h3></th>
@@ -18,5 +22,5 @@
         </tr>
         <?php endforeach; ?>
     </table>
-
+<?php } ?>
 
